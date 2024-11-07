@@ -92,3 +92,33 @@ function type() {
 }
 
 type();
+
+const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+};
+
+function createAnimationObserver() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Add the appropriate animation class based on data attribute
+                const animationType = entry.target.dataset.animation;
+                if (animationType) {
+                    entry.target.classList.add(animationType);
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('[data-animation]').forEach((element) => {
+        element.classList.add('hidden-element');
+        observer.observe(element);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    createAnimationObserver();
+});
